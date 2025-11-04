@@ -26,7 +26,6 @@ class COCODataset():
         imgID = self.ids[idx]
         imgInfo = self.coco.imgs[imgID]        
         imgPath = imgInfo['file_name']
-        
         annotations = self.loadAnnotations(imgID, imgInfo['width'], imgInfo['height'])
         if len(annotations) == 0:
             targets = {
@@ -37,7 +36,7 @@ class COCODataset():
                 'boxes': torch.as_tensor(annotations[..., :-1], dtype=torch.float32),
                 'labels': torch.as_tensor(annotations[..., -1], dtype=torch.int64),}
 
-        return imgPath, targets, imgID[4:6]
+        return imgPath, targets
 
 
     def loadAnnotations(self, imgID: int, imgWidth: int, imgHeight: int) -> np.ndarray:
@@ -79,11 +78,8 @@ def main(args):
     # create labels and images folders
     labels_folder = os.path.join(data_folder, 'labels')
     images_folder = os.path.join(data_folder, 'images')
-    months_folder = os.path.join(data_folder, 'months')
-
     os.makedirs(labels_folder, exist_ok=True)
     os.makedirs(images_folder, exist_ok=True)
-    os.makedirs(months_folder, exist_ok=True)
 
     train, val = load_datasets(args)
     print(f'Train size: {len(train.ids)}')
@@ -93,13 +89,11 @@ def main(args):
     # create a subfolder in labels and images with name 'train'
     labels_train_folder = os.path.join(labels_folder, 'train')
     images_train_folder = os.path.join(images_folder, 'train')
-    months_train_folder = os.path.join(months_folder, 'train')
     os.makedirs(labels_train_folder, exist_ok=True)
     os.makedirs(images_train_folder, exist_ok=True)
-    os.makedirs(months_train_folder, exist_ok=True)
 
     for i in range(len(train.ids)):
-        imgPath, target, month = train.get_item_for_yolo(i) # modify the get_item to also get the month
+        imgPath, target = train.get_item_for_yolo(i)
         #print(imgPath, target)
 
         img_Path = os.path.join(data_folder, imgPath)
@@ -121,29 +115,14 @@ def main(args):
         else:
             print(f'File {img_Path} does not exist')
             continue
-        if os.path.exists(img_Path) and month is not None:
-            shutil.copy(img_Path, yolo_file_name)
-            # create a txt file with the same name in labels folder
-            yolo_month_name = yolo_name.replace('.jpg', '.txt')
-            yolo_month_file = os.path.join(months_train_folder, yolo_month_name)
-            with open(yolo_month_file, 'w') as f:
-                f.write(f'{month}\n')
-        else:
-            print(f'File {img_Path} does not exist')
-            continue
-
-
-
     print('Train conversion done!')
 
     # CONVERT VAL
     # create a subfolder in labels and images with name 'val'
     labels_val_folder = os.path.join(labels_folder, 'val')
     images_val_folder = os.path.join(images_folder, 'val')
-    months_val_folder = os.path.join(months_folder, 'val')
     os.makedirs(labels_val_folder, exist_ok=True)
     os.makedirs(images_val_folder, exist_ok=True)
-    os.makedirs(months_val_folder, exist_ok=True)
 
     for i in range(len(val.ids)):
         imgPath, target = val.get_item_for_yolo(i)
@@ -164,16 +143,6 @@ def main(args):
                     w = box[2]
                     h = box[3]
                     f.write(f'{lbl-1} {x_center} {y_center} {w} {h}\n')
-        else:
-            print(f'File {img_Path} does not exist')
-            continue
-        if os.path.exists(img_Path) and month is not None:
-            shutil.copy(img_Path, yolo_file_name)
-            # create a txt file with the same name in labels folder
-            yolo_month_name = yolo_name.replace('.jpg', '.txt')
-            yolo_month_file = os.path.join(months_val_folder, yolo_month_name)
-            with open(yolo_month_file, 'w') as f:
-                f.write(f'{month}\n')
         else:
             print(f'File {img_Path} does not exist')
             continue
