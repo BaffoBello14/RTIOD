@@ -383,7 +383,6 @@ dmypy.json
 
 logs/
 checkpoint/
-data/
 wandb/
 outputs/
 *.bak

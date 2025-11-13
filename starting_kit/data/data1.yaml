@@ -1,0 +1,15 @@
+# data1.yaml
+train:
+  - ./images/train/01
+  - ./images/train/02
+  - ./images/train/03
+
+val:
+  - ./images/val/01
+  - ./images/val/02
+  - ./images/val/03
+
+
+nc: 4
+names: ['person','bicycle','motorcycle','vehicle']  # class names
+
