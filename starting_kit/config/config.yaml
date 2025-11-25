@@ -19,8 +19,8 @@ imgSize: 224
 
 # MARK: - training config
 lr: 5e-5
-batchSize: 16
-epochs: 100
+batchSize: 64
+epochs: 500
 patience: 10
 
 # MARK: - dataset
