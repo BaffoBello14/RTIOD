@@ -7,7 +7,7 @@ seed: 42
 numClass: 4
 currentDir: ${hydra:runtime.cwd}
 
-modelCheckpoint: yolov8m.pt  # checkpoints/last.pt
+modelCheckpoint: yolov12x.pt  # checkpoints/last.pt
 
 submission:
   type: 'val' # 'val' or 'test'
