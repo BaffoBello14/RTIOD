@@ -2,19 +2,21 @@ from ultralytics import YOLO
 from ultralytics.data import build_yolo_dataset, build_dataloader
 from ultralytics.cfg import get_cfg
 import torch
+import hydra
 
 from src.models.ensamble_learn_wgt import YOLO12WeightedEnsemble
 
 
-def main():
+@hydra.main(config_path="config", config_name="config", version_base="1.3")
+def main(args):
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
     # -----------------------------
     # LOAD 3 YOLO12x MODELS
     # -----------------------------
-    y1 = YOLO("yolo12x.pt").model
-    y2 = YOLO("yolo12x.pt").model
-    y3 = YOLO("yolo12x.pt").model
+    y1 = YOLO(args.modelCheckpoint).model
+    y2 = YOLO(args.modelCheckpoint).model
+    y3 = YOLO(args.modelCheckpoint).model
 
     y1.to(device)
     y2.to(device)
@@ -26,13 +28,12 @@ def main():
     ensemble = YOLO12WeightedEnsemble(y1, y2, y3).to(device)
 
     # -----------------------------
-    # LOAD DATASET FROM data.yaml
-    # (THE SAME WAY Ultralytics DOES)
+    # LOAD DATASET CONFIG
     # -----------------------------
     cfg = get_cfg(cfg="ultralytics/cfg/default.yaml")
-    cfg.data = "data/data.yaml"
-    cfg.imgsz = 160
-    cfg.batch = 64
+    cfg.data = f"{args.dataDir}/data.yaml"     # Match your provided structure
+    cfg.imgsz = args.imgSize
+    cfg.batch = args.batchSize
 
     train_dataset = build_yolo_dataset(cfg, mode="train")
     train_loader = build_dataloader(train_dataset, batch_size=cfg.batch)
@@ -40,12 +41,14 @@ def main():
     # -----------------------------
     # OPTIMIZER
     # -----------------------------
-    optimizer = torch.optim.Adam(ensemble.parameters(), lr=1e-4)
+    optimizer = torch.optim.Adam(ensemble.parameters(), lr=args.lr)
 
     # -----------------------------
     # TRAINING LOOP
     # -----------------------------
-    for epoch in range(20):
+    num_epochs = args.epochs
+
+    for epoch in range(num_epochs):
         for batch in train_loader:
             imgs = batch["img"].to(device)
             targets = batch["cls"]
@@ -56,9 +59,16 @@ def main():
             loss.backward()
             optimizer.step()
 
-        print(f"Epoch {epoch+1} | Loss: {loss.item():.4f} | Weights: {alpha.detach().cpu().numpy()}")
+        print(
+            f"Epoch {epoch+1}/{num_epochs} | "
+            f"Loss: {loss.item():.4f} | "
+            f"Weights: {alpha.detach().cpu().numpy()}"
+        )
 
-    torch.save(ensemble.state_dict(), "ensemble_yolo12x.pt")
+    # -----------------------------
+    # SAVE MODEL
+    # -----------------------------
+    torch.save(ensemble.state_dict(), f"{args.outputDir}/ensemble_yolo12x.pt")
 
 
 if __name__ == "__main__":
