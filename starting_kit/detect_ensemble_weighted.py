@@ -14,7 +14,6 @@ import numpy as np
 
 # ----------------------
 # CONFIG: YOLO ensemble weights per month
-# Example: month '01' uses models A,B,C with weights 0.5,0.3,0.2
 # ----------------------
 MONTH_WEIGHTS = {
     '01': {
@@ -33,48 +32,48 @@ MONTH_WEIGHTS = {
         'runs_yolo/train6/weights/best.pt': 0.2
     },
     '04': {
-        'runs_yolo/train5/weights/best.pt': 0.3,
-        'runs_yolo/train4/weights/best.pt': 0.5,
+        'runs_yolo/train4/weights/best.pt': 0.3,
+        'runs_yolo/train5/weights/best.pt': 0.5,
         'runs_yolo/train6/weights/best.pt': 0.2
     },
     '05': {
-        'runs_yolo/train5/weights/best.pt': 0.2,
-        'runs_yolo/train4/weights/best.pt': 0.5,
+        'runs_yolo/train4/weights/best.pt': 0.2,
+        'runs_yolo/train5/weights/best.pt': 0.5,
         'runs_yolo/train6/weights/best.pt': 0.3
     },
     '06': {
-        'runs_yolo/train5/weights/best.pt': 0.2,
-        'runs_yolo/train4/weights/best.pt': 0.3,
+        'runs_yolo/train4/weights/best.pt': 0.2,
+        'runs_yolo/train5/weights/best.pt': 0.3,
         'runs_yolo/train6/weights/best.pt': 0.5
     },
     '07': {
-        'runs_yolo/train5/weights/best.pt': 0.15,
-        'runs_yolo/train4/weights/best.pt': 0.3,
+        'runs_yolo/train4/weights/best.pt': 0.15,
+        'runs_yolo/train5/weights/best.pt': 0.3,
         'runs_yolo/train6/weights/best.pt': 0.55
     },
     '08': {
-        'runs_yolo/train5/weights/best.pt': 0.1,
-        'runs_yolo/train4/weights/best.pt': 0.3,
+        'runs_yolo/train4/weights/best.pt': 0.1,
+        'runs_yolo/train5/weights/best.pt': 0.3,
         'runs_yolo/train6/weights/best.pt': 0.6
     },
     '09': {
-        'runs_yolo/train5/weights/best.pt': 0.2,
-        'runs_yolo/train4/weights/best.pt': 0.3,
+        'runs_yolo/train4/weights/best.pt': 0.2,
+        'runs_yolo/train5/weights/best.pt': 0.3,
         'runs_yolo/train6/weights/best.pt': 0.5
     },
     '10': {
-        'runs_yolo/train5/weights/best.pt': 0.3,
         'runs_yolo/train4/weights/best.pt': 0.3,
+        'runs_yolo/train5/weights/best.pt': 0.3,
         'runs_yolo/train6/weights/best.pt': 0.3
     },
     '11': {
-        'runs_yolo/train5/weights/best.pt': 0.4,
-        'runs_yolo/train4/weights/best.pt': 0.2,
+        'runs_yolo/train4/weights/best.pt': 0.4,
+        'runs_yolo/train5/weights/best.pt': 0.2,
         'runs_yolo/train6/weights/best.pt': 0.4
     },
     '12': {
-        'runs_yolo/train5/weights/best.pt': 0.4,
-        'runs_yolo/train4/weights/best.pt': 0.2,
+        'runs_yolo/train4/weights/best.pt': 0.4,
+        'runs_yolo/train5/weights/best.pt': 0.2,
         'runs_yolo/train6/weights/best.pt': 0.4
     }
 
